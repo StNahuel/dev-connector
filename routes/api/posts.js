@@ -10,7 +10,7 @@ const User = require('../../models/User');
 // @route   POST api/posts
 // @desc    Create a post
 // @access  Private
-router.get(
+router.post(
   '/',
   [
     auth,
@@ -47,7 +47,7 @@ router.get(
 // @route   GET api/posts
 // @desc    Get All posts
 // @access  Private
-router.get('/', auth, async (req, rest) => {
+router.get('/', auth, async (req, res) => {
   try {
     const posts = await Post.find().sort({ date: -1 });
     res.json(posts);
@@ -158,7 +158,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
 // @route   POST api/posts/comment/:id
 // @desc    Comment on a post
 // @access  Private
-router.get(
+router.post(
   '/comment/:id',
   [
     auth,
