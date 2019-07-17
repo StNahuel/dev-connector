@@ -60,7 +60,7 @@ router.get('/', auth, async (req, res) => {
 // @route   GET api/posts/:id
 // @desc    Get post by Id
 // @access  Private
-router.get('/:id', auth, async (req, rest) => {
+router.get('/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -68,7 +68,7 @@ router.get('/:id', auth, async (req, rest) => {
       return res.status(404).json({ msg: 'Post not found' });
     }
 
-    res.json(posts);
+    res.json(post);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
@@ -81,9 +81,9 @@ router.get('/:id', auth, async (req, rest) => {
 // @route   DELETE api/posts/:id
 // @desc    Delete a post
 // @access  Private
-router.delete('/:id', auth, async (req, rest) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
-    const post = await Post.findById(req.param.id);
+    const post = await Post.findById(req.params.id);
 
     if (!post) {
       return res.status(404).json({ msg: 'Post not found' });
@@ -96,7 +96,7 @@ router.delete('/:id', auth, async (req, rest) => {
 
     await post.remove();
 
-    res.json(posts);
+    res.json(post);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
@@ -135,6 +135,8 @@ router.put('/unlike/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
+    console.log(JSON.stringify(post));
+
     //Check if the post has already been liked
     if (
       post.likes.filter(like => like.user.toString() === req.user.id).length ===
@@ -149,7 +151,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     post.likes.splice(removeIndex, 1);
     await post.save();
     res.json(post.likes);
-  } catch (error) {
+  } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
@@ -204,7 +206,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     //Pull out comment
-    const comment = post.comment.find(
+    const comment = post.comments.find(
       comment => comment.id === req.params.comment_id
     );
 

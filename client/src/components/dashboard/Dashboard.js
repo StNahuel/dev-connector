@@ -26,6 +26,8 @@ const Dashboard = ({
       <p className='lead'>
         <i className='fas fa-user' /> Welcome {user && user.name}
       </p>
+      {console.log('profile: ')}
+      {console.log(profile)}
       {profile !== null ? (
         <Fragment>
           <DashboardActions />
